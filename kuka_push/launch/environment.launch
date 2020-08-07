@@ -1,0 +1,8 @@
+<launch>
+  <node
+      pkg="kuka_push"
+      type="kukapush_env"
+      name="kukapush_env"
+      output="screen"
+    />
+</launch>

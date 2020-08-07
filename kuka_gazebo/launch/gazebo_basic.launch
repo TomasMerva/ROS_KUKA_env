@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <!-- Start gazebo simulator -->
+  <include file="$(find kuka_gazebo)/launch/kuka_world.launch" />
+
+  <!-- Run controllers -->
+  <include file="$(find kuka_gazebo)/launch/kuka_gazebo_controllers.launch" />
+
+</launch>

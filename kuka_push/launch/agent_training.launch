@@ -1,0 +1,11 @@
+<launch>
+  <node
+      pkg="kuka_push"
+      type="kuka_agent.py"
+      name="kuka_agent"
+      output="screen"
+    />
+
+
+
+</launch>

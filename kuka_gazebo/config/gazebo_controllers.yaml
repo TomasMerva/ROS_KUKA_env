@@ -1,0 +1,22 @@
+#Publish all joint states
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+
+# Joint trajectory controller
+position_trajectory_controller:
+    type: position_controllers/JointTrajectoryController
+    joints:
+        - joint_a1
+        - joint_a2
+        - joint_a3
+        - joint_a4
+        - joint_a5
+        - joint_a6
+    gains:
+        joint_1: {p: 80, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}
+        joint_2: {p: 80, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}
+        joint_3: {p: 80, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}
+        joint_4: {p: 60, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}
+        joint_5: {p: 60, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}
+        joint_6: {p: 60, i: 0, d: 0, i_clamp_min: 0, i_clamp_max: 0}

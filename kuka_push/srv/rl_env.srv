@@ -1,0 +1,8 @@
+float32[3] action
+bool reset
+---
+float32[26] state
+float32[3] desired_goal
+float32[3] achieved_goal
+float32 reward
+bool done
