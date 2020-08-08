@@ -9,4 +9,4 @@ This repository contains an implementation of the Soft Actor-Critic and Hindsigh
 - **ROS Melodic**
 - **ros_control**
 - **MoveIt**
-- **TrackIK**
+- **Trac-IK**

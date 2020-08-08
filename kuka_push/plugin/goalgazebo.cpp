@@ -7,7 +7,7 @@ using namespace gazebo;
 GoalGazebo::GoalGazebo()
 {
   nh = new ros::NodeHandle;
-  sub = nh->subscribe("goal_pub", 1, &GoalGazebo::Goal, this);
+  sub = nh->subscribe("visualization_marker", 1, &GoalGazebo::Goal, this);
 
   goal_pose.Rot().X() = 0;
   goal_pose.Rot().Y() = 0;
@@ -29,14 +29,10 @@ void GoalGazebo::OnUpdate()
 
 }
 
-void GoalGazebo::Goal(const geometry_msgs::Point& msg)
+void GoalGazebo::Goal(const visualization_msgs::Marker& msg)
 {
-  goal_pose.Pos().X() = msg.x;
-  goal_pose.Pos().Y() = msg.y;
-  goal_pose.Pos().Z() = msg.z;
+  goal_pose.Pos().X() = msg.pose.position.x;
+  goal_pose.Pos().Y() = msg.pose.position.y;
+  goal_pose.Pos().Z() = msg.pose.position.z;
   this->model->SetWorldPose(goal_pose);
 }
-
-
-
-

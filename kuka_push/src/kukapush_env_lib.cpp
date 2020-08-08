@@ -145,7 +145,7 @@ void kukapush_env::RewardFunction()
   }
 }
 
-
+// ------------------------------------------------
 void kukapush_env::GetObservation()
 {
   //get current pose of the gripper
@@ -168,6 +168,7 @@ void kukapush_env::GetObservation()
   gripper_prev.z = gripper_pose.pose.position.z;
 }
 
+// ------------------------------------------------
 void kukapush_env::SetObservation(kuka_push::rl_env::Response &resp)
 {
   //assign gripper's pose
@@ -222,6 +223,7 @@ void kukapush_env::SetObservation(kuka_push::rl_env::Response &resp)
   resp.done = done;
 }
 
+// ------------------------------------------------
 void kukapush_env::objectCallback(const kuka_push::object_pose_vel::ConstPtr &msg)
 {
     // subscribe object's pose and velocities from Gazebo object's plugins

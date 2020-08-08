@@ -70,4 +70,3 @@ target_link_libraries(kuka_env
                       kuka_env_movement
                       goal_env
     ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${EIGEN3_INCLUDE_DIRS})
-

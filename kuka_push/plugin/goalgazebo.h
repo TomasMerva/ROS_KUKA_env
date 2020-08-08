@@ -14,6 +14,7 @@
 #include <ros/ros.h>
 #include <ignition/math4/ignition/math/Vector3.hh>
 #include <ignition/math4/ignition/math/Pose3.hh>
+#include <visualization_msgs/Marker.h>
 
 
 namespace gazebo
@@ -27,7 +28,7 @@ class GoalGazebo : public ModelPlugin
 
     void OnUpdate(); //reading and broadcasting position of the object
 
-    void Goal(const geometry_msgs::Point& msg);
+    void Goal(const visualization_msgs::Marker& msg);
 
   private:
     //Gazebo objects
@@ -37,6 +38,7 @@ class GoalGazebo : public ModelPlugin
     //Ros objects
     ros::NodeHandle *nh;
     ros::Subscriber sub;
+    visualization_msgs::Marker marker;
 
     //variables for poses of the object
     ignition::math::Pose3d goal_pose;

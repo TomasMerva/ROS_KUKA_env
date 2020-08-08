@@ -6,8 +6,8 @@ RvizMarker::RvizMarker(ros::NodeHandle* nh)
     x_cord(700, 850),
     y_cord(-160, 160)
 {
+  // Publisher for Rviz
   marker_pub = nh->advertise<visualization_msgs::Marker>("visualization_marker", 1);
-  goal_pub = nh->advertise<geometry_msgs::Point>("goal_pub", 1);
 
   marker.header.frame_id = "/world";
   marker.ns = "basic_shapes";
@@ -44,16 +44,9 @@ RvizMarker::RvizMarker(ros::NodeHandle* nh)
 
 void RvizMarker::AddMarker()
 {
+  // publishing new goal position for RViz and Gazebo
   marker.header.stamp = ros::Time::now();
-  x = x_cord(mt)/1000.0;
-  y = y_cord(mt)/1000.0;
-
-  marker.pose.position.x = x;
-  marker.pose.position.y = y;
+  marker.pose.position.x = x_cord(mt)/1000.0; // generate random x_coordinate
+  marker.pose.position.y = y_cord(mt)/1000.0; // generate random y_coordinate
   marker_pub.publish(marker);
-
-  msg.x = marker.pose.position.x;
-  msg.y = marker.pose.position.y;
-  msg.z = marker.pose.position.z;
-  goal_pub.publish(msg);
 }
