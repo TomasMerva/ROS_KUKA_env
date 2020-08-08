@@ -1,3 +1,10 @@
+/**
+ * \file include.h
+ * \brief Included libraries and header files
+ *
+ * \author Tomas Merva
+ * \date 07.08.2020
+ */
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
@@ -11,6 +18,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Twist.h>
+
 
 #include <math.h>
 #include <visualization_msgs/Marker.h>

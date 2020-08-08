@@ -1,0 +1,16 @@
+<launch>
+   
+    <!-- start ArUco -->
+    <node name="aruco_tracker" pkg="aruco_ros" type="single">
+        <remap from="/camera_info" to="/kinect2/hd/camera_info" />
+        <remap from="/image" to="/kinect2/hd/image_color" />
+        <param name="image_is_rectified" value="true"/>
+        <param name="marker_size"        value="0.095"/>
+        <param name="marker_id"          value="325"/>
+        <param name="reference_frame"    value="base_link"/>
+        <param name="camera_frame"       value="kinect2_link"/>
+        <param name="marker_frame"       value="aruco_marker" />
+    </node>
+
+
+</launch>

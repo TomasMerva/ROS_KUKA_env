@@ -108,7 +108,7 @@ class SAC():
         self.sess.run(tf.global_variables_initializer())
         self.sess.run(self.target_init)
 
-        self.file_writer = tf.summary.FileWriter('/home/tomas/catkin_ws/src/kuka_sac/scripts/logs', self.sess.graph)
+        self.file_writer = tf.summary.FileWriter('/home/tomas/catkin_ws/src/kuka_push/scripts/logs', self.sess.graph)
 
     def SAC_getAction(self, state, deterministic=False):
         act_op = self.mean if deterministic else self.pi
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     """
     state_dim = 29
     act_dim = 3
-    timesteps_per_episode = 50
+    timesteps_per_episode = 100
     start_steps = 10000
 
     """
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     hidden_sizes = [256, 256]
     epochs = 30
 
-    iteration_per_epoch = 1900
+    iteration_per_epoch = 500
 
     timestep = 0
     ep_len = 0
@@ -311,7 +311,7 @@ if __name__ == "__main__":
 
             state = new_state
 
-            if done or (ep_len == (timesteps_per_episode - 1)):
+            if ep_len == (timesteps_per_episode - 1):
                 her()
                 list_states, list_actions, list_achievedGoals, list_new_states = [], [], [], []
                 break
@@ -350,6 +350,7 @@ if __name__ == "__main__":
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(iteration_per_epoch):
+            msg.training = True
             msg.epoch = epoch
             msg.episode = i
             msg.max_score = prev_ret
@@ -366,10 +367,14 @@ if __name__ == "__main__":
 
         msg.prev_score = np.mean(mean_ret)
         if prev_ret < np.mean(mean_ret):
-            agent.saver.save(agent.sess, "/home/tomas/catkin_ws/src/kuka_sac/saved_model/sac_KUKAReach_trained_model")
+            agent.saver.save(agent.sess, "/home/tomas/catkin_ws/src/kuka_push/saved_model/sac_KUKAPush_trained_model")
             print("model is saved")
             prev_ret = np.mean(mean_ret)
         mean_ret.clear()
+
+    msg.max_score = prev_ret
+    msg.training = False
+    pub.publish(msg)
 
 
 

@@ -1,17 +1,39 @@
+/**
+ * \file kukapush_env_lib.h
+ * \brief Header file for kukapush_env class
+ *
+ * \author Tomas Merva
+ * \date 07.08.2020
+ */
 #ifndef KUKAPUSH_ENV_LIB_H
 #define KUKAPUSH_ENV_LIB_H
 
 #include <kuka_push/include.h>
 #include <kuka_push/marker.h>
 
-
+/*! \class kukapush_env kukapush_env.h "include/kuka_push/kukapush_env.h"
+    \brief Class for creating KUKA_Push environment.
+*/
 class kukapush_env
 {
   public:
+    /** The constructor sets fixed orientation of the gripper, initializes MoveIt
+    *   and creates the trajectory publisher and the service client for reseting object in Gazebo
+    */
     kukapush_env(ros::NodeHandle *nh);
+
+    /** The method for receiving an action from the client and consequently after
+    *   40 ms returns the current state of the environment.
+    */
     bool env_step(kuka_push::rl_env::Request &req,
                   kuka_push::rl_env::Response &resp);
+
+    /** The method for resetting the environment
+    */
     void env_reset(kuka_push::rl_env::Response &resp);
+    
+    /** The callback method for getting the pose and velocity of the object.
+    */
     void objectCallback(const kuka_push::object_pose_vel::ConstPtr &msg);
 
   private:
@@ -58,7 +80,7 @@ class kukapush_env
     geometry_msgs::Point gripper_prev;
     geometry_msgs::Point gripper_speed;
 
-    double tolerance = 0.05;
+    double tolerance = 0.01;
     bool found_approach_ik;
     double time_move = 0.5;
 
@@ -72,7 +94,7 @@ class kukapush_env
 
     //RL variables
     float reward = -1.0;
-    bool done = false;    
+    bool done = false;
 };
 
 #endif // KUKAPUSH_ENV_LIB_H

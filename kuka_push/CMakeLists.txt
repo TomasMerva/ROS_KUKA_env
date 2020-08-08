@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   trajectory_msgs
   visualization_msgs
+  tf2
 )
 
 find_package(gazebo 9 REQUIRED)
@@ -69,6 +70,7 @@ catkin_package(
     std_msgs
     trajectory_msgs
     visualization_msgs
+    tf2
 #  DEPENDS system_lib
 )
 

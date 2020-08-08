@@ -7,6 +7,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/Plugin.hh>
 
+#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
@@ -14,6 +15,8 @@
 #include <ignition/math4/ignition/math/Vector3.hh>
 #include <ignition/math4/ignition/math/Pose3.hh>
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include <kuka_push/object_reset.h>
 #include <kuka_push/object_pose_vel.h>
@@ -48,6 +51,7 @@ class PushObject : public ModelPlugin
 
     geometry_msgs::Pose object_pose_msg;
     geometry_msgs::Twist object_vel_msg;
+    geometry_msgs::TransformStamped transformStamped;
 
     //variables for poses of the object
     ignition::math::Pose3d new_pose;

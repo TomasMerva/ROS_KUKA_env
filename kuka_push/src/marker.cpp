@@ -4,7 +4,7 @@
 RvizMarker::RvizMarker(ros::NodeHandle* nh)
   : mt(rd()),
     x_cord(700, 850),
-    y_cord(-100, 100)
+    y_cord(-160, 160)
 {
   marker_pub = nh->advertise<visualization_msgs::Marker>("visualization_marker", 1);
   goal_pub = nh->advertise<geometry_msgs::Point>("goal_pub", 1);

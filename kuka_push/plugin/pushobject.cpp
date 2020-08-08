@@ -20,6 +20,9 @@ PushObject::PushObject()
   new_pose.Rot().Z() = 0;
   new_pose.Rot().W() = 1;
   new_pose.Pos().Z() = 0.42;
+
+  transformStamped.header.frame_id = "world";
+  transformStamped.child_frame_id = "object";
 }
 
 void PushObject::Load(physics::ModelPtr _parent, sdf::ElementPtr)
@@ -56,6 +59,19 @@ void PushObject::OnUpdate()
     object_msg.twist.angular.z = object_angular_vel.Z();
 
     object_cord_pub.publish(object_msg);
+
+    static tf2_ros::TransformBroadcaster br;
+    transformStamped.header.stamp = ros::Time::now();
+    transformStamped.transform.translation.x = object_msg.pose.position.x;
+    transformStamped.transform.translation.y = object_msg.pose.position.y;
+    transformStamped.transform.translation.z = object_msg.pose.position.z;
+
+    transformStamped.transform.rotation.x = object_msg.pose.orientation.x;
+    transformStamped.transform.rotation.y = object_msg.pose.orientation.y;
+    transformStamped.transform.rotation.z = object_msg.pose.orientation.z;
+    transformStamped.transform.rotation.w = object_msg.pose.orientation.w;
+
+    br.sendTransform(transformStamped);
 }
 
 

@@ -47,12 +47,11 @@ bool kukapush_env::env_step(kuka_push::rl_env::Request &req,
   {
     action_pose.position.x = (static_cast<double>(req.action[0])*delta_x + delta_x) + half_range_x;
     action_pose.position.y = (static_cast<double>(req.action[1])*delta_y + delta_y) + half_range_y;
-//    action_pose.position.z = (static_cast<double>(req.action[1])*delta_z + delta_z) + half_range_z;
-//    if(action_pose.position.z < 0.43)
-//    {
-//      action_pose.position.z = 0.43;
-//    }
-    action_pose.position.z = 0.43;
+    action_pose.position.z = (static_cast<double>(req.action[1])*delta_z + delta_z) + half_range_z;
+    if(action_pose.position.z < 0.43)
+    {
+      action_pose.position.z = 0.43;
+    }
     ExecuteAction(action_pose);
     ros::Duration(0.03).sleep();
     GetObservation();
@@ -70,10 +69,7 @@ void kukapush_env::env_reset(kuka_push::rl_env::Response &resp)
   action_pose.position.x = 0.62;
   action_pose.position.y = 0.0;
   action_pose.position.z = 0.43;
-  //go to initial pose
-//  action_pose.position.x = x_cord(mt)/1000.0;
-//  action_pose.position.y = y_cord(mt)/1000.0;
-//  action_pose.position.z = 0.43;
+  //go to home pose
   ExecuteAction(action_pose);
   ros::Duration(0.8).sleep();
 
@@ -158,10 +154,6 @@ void kukapush_env::GetObservation()
   object_gripper.y = gripper_pose.pose.position.y - object_pose.position.y;
   object_gripper.z = gripper_pose.pose.position.z - object_pose.position.z;
 
-//  //object position relative to goal
-//  object_goal.x = goal_position.x - object_pose.position.x;
-//  object_goal.y = goal_position.y - object_pose.position.y;
-//  object_goal.z = goal_position.z - object_pose.position.z;
   gripper_speed.x = ((abs(gripper_pose.pose.position.x - gripper_prev.x))/0.04)/10;
   gripper_speed.y = ((abs(gripper_pose.pose.position.y - gripper_prev.y))/0.04)/10;
   gripper_speed.z = ((abs(gripper_pose.pose.position.z - gripper_prev.z))/0.04)/10;
