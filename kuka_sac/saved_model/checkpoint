@@ -1,2 +1,0 @@
-model_checkpoint_path: "/home/tomas/catkin_ws/src/kuka_sac/saved_model/sac_KUKAReach_trained_model"
-all_model_checkpoint_paths: "/home/tomas/catkin_ws/src/kuka_sac/saved_model/sac_KUKAReach_trained_model"
