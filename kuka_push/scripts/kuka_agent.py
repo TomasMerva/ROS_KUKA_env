@@ -11,7 +11,6 @@ import time
 import tensorflow as tf
 import core
 from core import get_vars
-from config import configData
 
 
 class SAC():
