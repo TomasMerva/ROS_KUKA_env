@@ -1,7 +1,7 @@
 # ROS_KUKA_env
 
 ## Overview
-This repository contains the implementation of the **Soft Actor-Critic** and **Hindsight Experience Replay** algorithms alongside with the RL robotics environment **KUKA_Push** within ROS. [video](https://youtu.be/GN2U0PE8QBk)
+This repository contains the implementation of the **Soft Actor-Critic** and **Hindsight Experience Replay** algorithms alongside with the RL robotics environment **KUKA_Push** within ROS. The goal of the environment is to push the block towards a goal position using the KUKA end-effector. [video](https://youtu.be/GN2U0PE8QBk)
 
 ![KUKA_Push environment](https://raw.githubusercontent.com/TomasMerva/ROS_KUKA_env/master/img/kukapush.png?raw=true "KUKA_Push environment")
 
@@ -22,4 +22,9 @@ In order to get a state of the block, the object gazebo plugin has been created.
 The learning performance of SAC+HER in the KUKA_Push environment for 30 epochs (every epoch = 500 episodes = 500*100 timesteps):
 
 ![KUKA_Push performance](https://raw.githubusercontent.com/TomasMerva/ROS_KUKA_env/master/img/kukapush_performance.png?raw=true "KUKA_Push performance")
+
+## Acknowledgement
+I would like to thank **OpenAI SpinningUp tutorials** and **kuka_experimental** for their tutorials, code and packages.
+https://spinningup.openai.com/en/latest/
+http://wiki.ros.org/kuka_experimental
 
