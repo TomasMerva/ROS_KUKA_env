@@ -17,6 +17,7 @@ from core import get_vars
 class trainedAgent():
     def __init__(self):
         self.sess = tf.Session()
+        #this needs to be changed !!!!!!!!!!!!!!!!!!!!!!!
         self.model = tf.train.import_meta_graph\
             ("/home/tomas/catkin_ws/src/kuka_push/saved_model/sac_KUKAPush_trained_model.meta")
         self.model.restore(self.sess, tf.train.latest_checkpoint("/home/tomas/catkin_ws/src/kuka_push/saved_model/"))
@@ -75,9 +76,7 @@ class trainedAgent():
 
 
 if __name__ == "__main__":
-    """
-    Initialization
-    """
+    # intialization
     rospy.init_node("kuka_agent")
     rospy.wait_for_service("kukapush_server")
     step = rospy.ServiceProxy("kukapush_server", rl_env)
@@ -88,16 +87,12 @@ if __name__ == "__main__":
     tf.set_random_seed(0)
     np.random.seed(0)
 
-    """
-    Vlastnosti prostredia
-    """
+    # properties of the environment
     state_dim = 29
     act_dim = 3
     timesteps_per_episode = 50
 
-    """
-    Hyperparametre
-    """
+    # hyperparameters
     buffer_maxsize = 1000000
     batchSize = 256
     hidden_sizes = [256, 256]
@@ -105,15 +100,9 @@ if __name__ == "__main__":
     timestep = 0
     ep_len = 0
 
-    """
-    Vysledky
-    """
+    # Results
     mean_ret = []
 
-
-    """
-    definovanie agent a buffer
-    """
     agent = trainedAgent()
     replay_buffer = ReplayBuffer(state_dim, act_dim, buffer_maxsize)
 
@@ -181,7 +170,3 @@ if __name__ == "__main__":
         elif resp.reward== -1.0:
             msg.act_score = 0
         pub.publish(msg)
-
-
-
-
