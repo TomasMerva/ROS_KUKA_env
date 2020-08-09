@@ -2,7 +2,7 @@
 <launch>
 
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
@@ -10,7 +10,7 @@
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find kuka_gazebo)/worlds/kuka.world"/>
+    <arg name="world_name" value="$(find kuka_gazebo)/worlds/kukapush.world"/>
     <arg name="debug" value="$(arg debug)" />
     <arg name="gui" value="$(arg gui)" />
     <arg name="paused" value="$(arg paused)"/>
@@ -18,19 +18,11 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
-  
+
 <!-- Load URDF -->
   <param name="robot_description" textfile="$(find kuka_kr6_support)/urdf/kr6.urdf" />
 
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-        args="-urdf -model kuka_kr6r900sixx -param robot_description
-        -J joint_a1 0.0
-        -J joint_a2 -1.57
-        -J joint_a3 1.57
-        -J joint_a4 0.0
-        -J joint_a5 1.57
-        -J joint_a6 0.0" />
-  
+
+
 
 </launch>

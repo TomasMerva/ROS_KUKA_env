@@ -34,8 +34,7 @@ The learning performance of SAC+HER in the KUKA_Push environment for 30 epochs (
 ![KUKA_Push performance](https://raw.githubusercontent.com/TomasMerva/ROS_KUKA_env/master/img/kukapush_performance.png?raw=true "KUKA_Push performance")
 
 ## Acknowledgement
-I would like to thank **OpenAI SpinningUp tutorials** and **kuka_experimental** for their tutorials, code and packages.
+I would like to thank **OpenAI SpinningUp** and **kuka_experimental** for their tutorials, code and packages.
 https://spinningup.openai.com/en/latest/
 
 http://wiki.ros.org/kuka_experimental
-
