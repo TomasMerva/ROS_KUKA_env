@@ -6,11 +6,11 @@ This repository contains the implementation of the **Soft Actor-Critic** and **H
 ![KUKA_Push environment](https://raw.githubusercontent.com/TomasMerva/ROS_KUKA_env/master/img/kukapush.png?raw=true "KUKA_Push environment")
 
 ## Dependency
-- **ROS Melodic**
-- **ros_control**
-- **MoveIt**
-- **Trac-IK**
-- **TensorFlow (Version 1.14.0)**
+- **ROS Melodic** [link](http://wiki.ros.org/melodic/Installation/Ubuntu)
+- **ros_control** [link](http://wiki.ros.org/ros_control)
+- **MoveIt**  [link](https://moveit.ros.org/install/)
+- **Trac-IK** [link](https://ros-planning.github.io/moveit_tutorials/doc/trac_ik/trac_ik_tutorial.html)
+- **TensorFlow (Version 1.14.0)** [link](https://www.tensorflow.org/install/pip)
 
 ### Overview of ROS mechanism for KUKA_Push
 The agent and environment are two separate ROS nodes that communicate through ROS Services. The agent fulfils the role of the client, whereas the environment functions as the server. Before each episode, the agent sends a request with reset flag set to 1. As a result, the environment ignores the received actions and prepares itself for new episode. After resetting the environment, the agent chooses actions [X,Y,Z] based on a current state of the environment and sends them in the form of a request to the service server (the environment). Consequently, the desired [X,Y,Z] coordinates are assigned to the Trac-IK solver in order to compute a set of position waypoints that are applied to the robot for the time of 30ms. The new state is recorded after those 30 ms and thereafter sent back with other information to the agent. The interaction loop lasts 40ms.
