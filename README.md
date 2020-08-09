@@ -1,9 +1,7 @@
 # ROS_KUKA_env
 
 ## Overview
-This repository contains an implementation of the Soft Actor-Critic and Hindsight Experience Replay algorithms alongside with two custom created RL robotics environments within ROS:
-- KUKA_Reach
-- KUKA_Push
+This repository contains an implementation of the Soft Actor-Critic and Hindsight Experience Replay algorithms alongside with the RL robotics environments `KUKA_Push` within ROS
 
 ## Dependency
 - **ROS Melodic**
