@@ -25,8 +25,8 @@ In order to get a state of the block, the object gazebo plugin has been created.
 4. Start the training process: `roslaunch kuka_push agent_training.launch`
 ---
 5. Check your path for saving and reloading the neural network model
-  5.1. `kuka_push/scripts/kuka_agent.py` -> path where you want to save the model
-  5.2. `kuka_push/scripts/kuka_trained.py` -> path from where you want to load the model
+- `kuka_push/scripts/kuka_agent.py` -> path where you want to save the model
+- `kuka_push/scripts/kuka_trained.py` -> path from where you want to load the model
 
 ## Result
 The learning performance of SAC+HER in the KUKA_Push environment for 30 epochs (every epoch = 500 episodes = 500*100 timesteps):
