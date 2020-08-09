@@ -24,6 +24,7 @@
 namespace gazebo
 {
 
+// Gazebo plugin for the block: getting its position and setting new random position of it
 class PushObject : public ModelPlugin
 {
   public:
@@ -32,7 +33,7 @@ class PushObject : public ModelPlugin
 
     void OnUpdate();
 
-    //service function
+    //service function for setting random position of the block
     bool ObjectReset(kuka_push::object_reset::Request &req,
                      kuka_push::object_reset::Response &resp);
 
@@ -47,6 +48,7 @@ class PushObject : public ModelPlugin
     ros::ServiceServer service_reset;
     ros::Publisher object_cord_pub;
 
+    //Custom msg
     kuka_push::object_pose_vel object_msg;
 
     geometry_msgs::Pose object_pose_msg;
@@ -59,14 +61,10 @@ class PushObject : public ModelPlugin
     ignition::math::Vector3d object_linear_vel;
     ignition::math::Vector3d object_angular_vel;
 
-
     // Pointer to the update event connection
     event::ConnectionPtr updateConnection;
 
-    //Variables for random values
-    float x;
-    float y;
-
+    // Generator of random variables
     std::random_device rd;
     std::mt19937 mt;
     std::uniform_int_distribution<int> x_cord;

@@ -13,8 +13,8 @@ class RvizMarker
     visualization_msgs::Marker marker;
 
   private:
+    // Publisher for RViz a Gazebo
     ros::Publisher marker_pub;
-    ros::Publisher goal_pub;
 
     // Generator of random variables
     std::random_device rd;

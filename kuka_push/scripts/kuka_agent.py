@@ -11,6 +11,7 @@ import time
 import tensorflow as tf
 import core
 from core import get_vars
+from config import configData
 
 
 class SAC():
@@ -128,61 +129,51 @@ class SAC():
 
 
 if __name__ == "__main__":
-    """
-    Initialization
-    """
+    # Initialization
     rospy.init_node("kuka_agent")
     rospy.wait_for_service("kukapush_server")
+    #service client for interacting with the environment
     step = rospy.ServiceProxy("kukapush_server", rl_env)
+    #publisher for RViz plugin
     pub = rospy.Publisher('/rl_states', rlplugin_msg, queue_size=1)
     msg = rlplugin_msg()
+    # Load hyperparameters
+    params = configData()
 
-
+    # Setting seed
     tf.set_random_seed(0)
     np.random.seed(0)
 
-    """
-    Vlastnosti prostredia
-    """
+    # Properties of the environment
     state_dim = 29
     act_dim = 3
     timesteps_per_episode = 100
     start_steps = 10000
 
-    """
-    Hyperparametre
-    """
+    # Hyperparameters
     buffer_maxsize = 1000000
     batchSize = 256
     hidden_sizes = [256, 256]
     epochs = 30
-
     iteration_per_epoch = 500
 
     timestep = 0
     ep_len = 0
 
-    """
-    Vysledky
-    """
+    # Recording results
     mean_ret = []
     prev_ret = 0.0
 
-    """
-    HER
-    """
+    # lists for Hindsight Experience Replay
     list_achievedGoals = []
     list_states = []
     list_new_states = []
     list_actions = []
 
-    """
-    definovanie agent a buffer
-    """
     agent = SAC(state_dim, act_dim, hidden_sizes)
     replay_buffer = ReplayBuffer(state_dim, act_dim, buffer_maxsize)
 
-
+    # request for resetting the environment
     def reset_env():
         reset = True
         action = [0, 0, 0]
@@ -192,7 +183,7 @@ if __name__ == "__main__":
         state = np.round(state, decimals=6)
         return state, obs
 
-
+    # generating random actions
     def randomAction():
         action_x = random.uniform(-1.01, 1.01)
         action_y = random.uniform(-1.01, 1.01)
@@ -200,11 +191,13 @@ if __name__ == "__main__":
         action = [action_x, action_y, action_z]
         return action
 
-
+    # Hindsight Experience Replay algorithm
     def her():
         global ep_len
         global list_states, list_actions, list_new_states, list_achievedGoals
+        #check if episode lasted less than 4 timesteps
         if ep_len < 4:
+            # create additional goal only from the last timestep
             her_state = np.concatenate((np.array(list_states[0]), np.array(list_achievedGoals[0])))
             her_next_state = np.concatenate((np.array(list_new_states[0]), np.array(list_achievedGoals[0])))
             her_action = list_actions[0]
@@ -212,8 +205,9 @@ if __name__ == "__main__":
             her_done = True
             replay_buffer.store(her_state, her_action, her_reward, her_next_state, her_done)
         else:
+            # divide an episode into 4 groups/parts, which gives us 4 additional goals
             indexes = np.sort(np.random.randint(0, ep_len, size=3))
-            """ prva skupina """
+            """ first group """
             for i in range(indexes[0] + 1):
                 her_state = np.concatenate((np.array(list_states[i]), np.array(list_achievedGoals[indexes[0]])))
                 her_next_state = np.concatenate(
@@ -226,7 +220,7 @@ if __name__ == "__main__":
                     her_done = False
                     her_reward = -1.0
                 replay_buffer.store(her_state, her_action, her_reward, her_next_state, her_done)
-            """ druha skupina """
+            """ second group """
             for i in range(indexes[0] + 1, indexes[1] + 1):
                 her_state = np.concatenate((np.array(list_states[i]), np.array(list_achievedGoals[indexes[1]])))
                 her_next_state = np.concatenate(
@@ -239,7 +233,7 @@ if __name__ == "__main__":
                     her_done = False
                     her_reward = -1.0
                 replay_buffer.store(her_state, her_action, her_reward, her_next_state, her_done)
-            """ tretia skupina """
+            """ third group """
             for i in range(indexes[1] + 1, indexes[2] + 1):
                 her_state = np.concatenate((np.array(list_states[i]), np.array(list_achievedGoals[indexes[2]])))
                 her_next_state = np.concatenate(
@@ -252,7 +246,7 @@ if __name__ == "__main__":
                     her_done = False
                     her_reward = -1.0
                 replay_buffer.store(her_state, her_action, her_reward, her_next_state, her_done)
-            """ stvrta skupina """
+            """ fourth group """
             for i in range(indexes[2] + 1, ep_len):
                 her_state = np.concatenate((np.array(list_states[i]), np.array(list_achievedGoals[ep_len - 1])))
                 her_next_state = np.concatenate(
@@ -266,7 +260,7 @@ if __name__ == "__main__":
                     her_reward = -1.0
                 replay_buffer.store(her_state, her_action, her_reward, her_next_state, her_done)
 
-
+    # Run one episode
     def episode():
         state, obs = reset_env()
 
@@ -277,40 +271,42 @@ if __name__ == "__main__":
         reward, ep_len, done, reset = 0, 0, False, False
 
         for _ in range(timesteps_per_episode):
-            """ zaznamenat stav pre HER"""
+            # record state for HER
             list_states.append(obs)
 
+            #first X timesteps do only random actions -> it supports exploration
             if timestep > start_steps:
                 action = agent.SAC_getAction(state)
             else:
                 action = randomAction()
 
-            """zaznamenat action kvoli her"""
+            # record action for HER
             list_actions.append(action)
 
-            """ Odoslanie udajov do prostredia"""
+            # do an interaction with the environment
             resp = step(action, reset)
 
-            """ Spracovanie spravy od prostredia """
+            # new state, reward and done flag for the current timestep
             new_state = np.round(np.concatenate((resp.state, resp.desired_goal), axis=None), decimals=6)
             reward = resp.reward
             done = resp.done
 
-            """ pre HER ucely"""
+            # record new_state and achieved_goal for HER
             achieved_goal = np.round(resp.achieved_goal, decimals=6)
             obs = np.round(resp.state, decimals=6)
             list_new_states.append(obs)
             list_achievedGoals.append(achieved_goal)
 
-            """ Cas """
+            # increment time
             ep_len += 1
             timestep += 1
 
-            """ Ulozenie trajektorii """
+            # save trajectory into the buffer
             replay_buffer.store(state, action, reward, new_state, done)
 
             state = new_state
 
+            # at the end of the episode use HER
             if ep_len == (timesteps_per_episode - 1):
                 her()
                 list_states, list_actions, list_achievedGoals, list_new_states = [], [], [], []
@@ -325,15 +321,14 @@ if __name__ == "__main__":
         while not done:
             action = agent.SAC_getAction(state, True)
 
-            """ Send request to server """
+            # Send request to server
             resp = step(action, reset)
 
-            """ Handle response from server """
+            #Handle response from server
             state = np.round(np.concatenate((resp.state, resp.desired_goal), axis=None), decimals=6)
             reward = resp.reward
             done = resp.done
 
-            """ Cas """
             ep_len += 1
 
             if reward == 0.0:
@@ -346,26 +341,33 @@ if __name__ == "__main__":
         elif reward == -1.0:
             mean_ret.append(0)
 
-
+    # main loop
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(iteration_per_epoch):
+            # data for RViz plugin
             msg.training = True
             msg.epoch = epoch
             msg.episode = i
             msg.max_score = prev_ret
             pub.publish(msg)
+            # run one episode
             episode()
+            # Update policy
             for j in range(2*ep_len):
                 batch = replay_buffer.sample_batch(batchSize)
                 agent.SAC_update(batch['obs1'], batch['obs2'], batch['acts'], batch['rews'], batch['done'])
+        # test policy after each epoch
         for j in range(10):
             policy_test()
         print('epoch: %3d \t ep_ret_avg: %.3f \t elapsed_time: %3d' % (epoch, np.mean(mean_ret), (time.time() - start_time)))
+        # Tensorboard charts
         summary = agent.sess.run(agent.summary_reward, feed_dict={agent.summary_reward_ph: np.mean(mean_ret)})
         agent.file_writer.add_summary(summary, (epoch + 1))
 
         msg.prev_score = np.mean(mean_ret)
+
+        # save the best policy
         if prev_ret < np.mean(mean_ret):
             agent.saver.save(agent.sess, "/home/tomas/catkin_ws/src/kuka_push/saved_model/sac_KUKAPush_trained_model")
             print("model is saved")
@@ -375,10 +377,3 @@ if __name__ == "__main__":
     msg.max_score = prev_ret
     msg.training = False
     pub.publish(msg)
-
-
-
-
-
-
-

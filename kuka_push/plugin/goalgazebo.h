@@ -23,12 +23,11 @@ namespace gazebo
 class GoalGazebo : public ModelPlugin
 {
   public:
-    GoalGazebo();
+    GoalGazebo(); // create subscriber and set fixed orientation of the object
     void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/);
+    void OnUpdate();
 
-    void OnUpdate(); //reading and broadcasting position of the object
-
-    void Goal(const visualization_msgs::Marker& msg);
+    void Goal(const visualization_msgs::Marker& msg); //callback subcribing function
 
   private:
     //Gazebo objects
@@ -45,9 +44,6 @@ class GoalGazebo : public ModelPlugin
 
     // Pointer to the update event connection
     event::ConnectionPtr updateConnection;
-
-
-
 };
 GZ_REGISTER_MODEL_PLUGIN(GoalGazebo)
 }

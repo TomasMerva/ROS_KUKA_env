@@ -13,8 +13,10 @@ PushObject::PushObject()
   // service for reseting
   service_reset = nh->advertiseService("object_server", &PushObject::ObjectReset, this);
 
+  // publisher for object's velocity and pose
   object_cord_pub = nh->advertise<kuka_push::object_pose_vel>("object_cord", 1);
 
+  //set fixed orientation and Z coordinate of the block
   new_pose.Rot().X() = 0;
   new_pose.Rot().Y() = 0;
   new_pose.Rot().Z() = 0;
@@ -58,8 +60,10 @@ void PushObject::OnUpdate()
     object_msg.twist.angular.y = object_angular_vel.Y();
     object_msg.twist.angular.z = object_angular_vel.Z();
 
+    //publishing the pose and velocity of the block
     object_cord_pub.publish(object_msg);
 
+    // publish tf coordinates for RViz
     static tf2_ros::TransformBroadcaster br;
     transformStamped.header.stamp = ros::Time::now();
     transformStamped.transform.translation.x = object_msg.pose.position.x;
@@ -79,15 +83,10 @@ bool PushObject::ObjectReset(kuka_push::object_reset::Request &req,
                              kuka_push::object_reset::Response &resp)
 {
   //Generating random numbers for X and Y, Z will remain the same
-  x = x_cord(mt)/1000.0;
-  y = y_cord(mt)/1000.0;
-  //
-  new_pose.Pos().X() = x;
-  new_pose.Pos().Y() = y;
+  new_pose.Pos().X() = x_cord(mt)/1000.0;
+  new_pose.Pos().Y() = y_cord(mt)/1000.0;
   //setting the new random position for object in Gazebo
   this->model->SetWorldPose(new_pose);
-
   resp.confirm = true;
-
   return true;
 }

@@ -6,7 +6,7 @@ RvizMarker::RvizMarker(ros::NodeHandle* nh)
     x_cord(700, 850),
     y_cord(-160, 160)
 {
-  // Publisher for Rviz
+  // Publisher for RViz and Gazebo
   marker_pub = nh->advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
   marker.header.frame_id = "/world";
