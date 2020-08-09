@@ -136,8 +136,7 @@ if __name__ == "__main__":
     #publisher for RViz plugin
     pub = rospy.Publisher('/rl_states', rlplugin_msg, queue_size=1)
     msg = rlplugin_msg()
-    # Load hyperparameters
-    params = configData()
+    
 
     # Setting seed
     tf.set_random_seed(0)
